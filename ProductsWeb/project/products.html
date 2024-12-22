@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        header {
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+        section {
+            margin: 10px auto;
+            max-width: 1200px;
+            text-align: center;
+        }
+        #controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        #controls select, #controls input, #controls button {
+            padding: 12px;
+            font-size: 14px;
+        }
+        #products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .product {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            width: 200px;
+            background-color: #fff;
+            transition: box-shadow 0.3s ease;
+        }
+        .product:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .product img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Zess Store</h1>
+</header>
+
+<section id="controls">
+    <!-- Kategori Dropdown -->
+    <select id="categories">
+        <option value="all">Categories</option>
+    </select>
+
+    <!-- Arama Kutusu -->
+    <input type="text" id="search" placeholder="Type a category">
+
+    <!-- Sıralama Dropdown -->
+    <select id="sort">
+        <option value="low-high">Price: Low to High</option>
+        <option value="high-low">Price: High to Low</option>
+    </select>
+
+    <!-- Get Products Butonu -->
+    <button id="get-products">Get Products</button>
+</section>
+
+<section id="products">
+    <!-- Ürünler buraya dinamik olarak yüklenecek -->
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
