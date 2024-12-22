@@ -1,5 +1,26 @@
 const API_URL = "https://dummyjson.com";
 
+// Show Modal Function
+function showModal(title, message, total = '', discountedTotal = '') {
+    const modal = document.getElementById('cart-alert-modal');
+    document.getElementById('modal-title').innerText = title;
+    document.getElementById('modal-message').innerText = message;
+
+    if (total && discountedTotal) {
+        document.getElementById('modal-total').innerText = `Cart Total: $${total}`;
+        document.getElementById('modal-discounted-total').innerText = `Discounted Total: $${discountedTotal}`;
+    } else {
+        document.getElementById('modal-total').innerText = '';
+        document.getElementById('modal-discounted-total').innerText = '';
+    }
+
+    modal.style.display = 'flex';
+
+    document.getElementById('close-modal').addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+}
+
 // Add to Cart Function
 async function addToCart(productId, quantity) {
     try {
@@ -7,20 +28,31 @@ async function addToCart(productId, quantity) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                userId: 1, // Test için sabit bir userId kullanıyoruz
+                userId: 1, // Test için sabit bir userId
                 products: [{ id: parseInt(productId), quantity: parseInt(quantity) }]
             })
         });
 
         if (response.ok) {
             const cart = await response.json();
-            alert(`Added to Cart! Total: $${cart.total}, Discounted Total: $${cart.discountedTotal}`);
+            showModal(
+                'Add to Cart',
+                'Products added to shopping cart successfully!',
+                cart.total,
+                cart.discountedTotal
+            );
         } else {
             const error = await response.json();
-            alert(`Failed to add to cart: ${error.message}`);
+            showModal(
+                'Add to Cart',
+                `Failed to add to cart: ${error.message}`
+            );
         }
     } catch (error) {
-        alert(`Error: ${error.message}`);
+        showModal(
+            'Add to Cart',
+            `An error occurred: ${error.message}`
+        );
     }
 }
 
