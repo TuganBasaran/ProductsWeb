@@ -2,7 +2,7 @@ const API_URL = "https://dummyjson.com";
 
 // Load Categories
 async function loadCategories() {
-    const response = await fetch(`${API_URL}/products/categories`);
+    const response = await fetch(`${API_URL}/products/category-list`);
     const categories = await response.json();
     const categoriesDropdown = document.getElementById('categories');
     categories.forEach(category => {
@@ -15,18 +15,14 @@ async function loadCategories() {
 
 // Load and Sort Products
 async function loadProducts(category = "all", sortType = "low-high") {
-    let url = `${API_URL}/products`;
-    if (category !== "all") url = `${API_URL}/products/category/${category}`;
+    let sortBy = "price"; //where the sorting will be done
+    let order = sortType === "low-high" ? "asc" : "desc"; // ascending or descending order
+
+    let url = `${API_URL}/products?sortBy=${sortBy}&order=${order}`;
+    if (category !== "all") url = `${API_URL}/products/category/${category}?sortBy=${sortBy}&order=${order}`;
+
     const response = await fetch(url);
     const { products } = await response.json();
-
-    // Sıralama işlemi
-    if (sortType === "low-high") {
-        products.sort((a, b) => a.price - b.price); // Fiyat düşükten yükseğe
-    } else if (sortType === "high-low") {
-        products.sort((a, b) => b.price - a.price); // Fiyat yüksekten düşüğe
-    }
-
     displayProducts(products);
 }
 
@@ -60,5 +56,5 @@ document.getElementById('get-products').addEventListener('click', () => {
 // On Page Load
 window.addEventListener('DOMContentLoaded', () => {
     loadCategories();
-    loadProducts(); // Varsayılan tüm ürünler
+    loadProducts();
 });
