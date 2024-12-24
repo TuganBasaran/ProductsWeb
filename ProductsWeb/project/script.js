@@ -15,89 +15,47 @@ async function loadCategories() {
   });
 }
 
-//  if (category !== "all") {
-        //    url += `&category=${category}`;
-        //  }
+// Load Products
+async function loadProducts(
+  category = "all",
+  searchQuery = "",
+  sortType = "default"
+) {
+  let url = `${API_URL}/products`;
+  if (category !== "all") {
+    if (sortType !== "default") {
+      let sortBy = "price";
+      let order = sortType === "low-high" ? "asc" : "desc";
 
-// // Load Products
-// async function loadProducts(
-//   category = "all",
-//   searchQuery = "",
-//   sortType = "default"
-// ) {
-//   let url = `${API_URL}/products`;
-//   if (category !== "all") {
-//     url += `/search?category=${category}`;
-//     if (!searchQuery) {
-//       if (sortType !== "default") {
-//         let sortBy = "price";
-//         let order = sortType === "low-high" ? "asc" : "desc";
-//         url += `&sortBy=${sortBy}&order=${order}`;
-//       }
-//     } else {
-//       let sortBy = "price";
-//       url += `&q=${searchQuery}`;
-//       let order = sortType === "low-high" ? "asc" : "desc";
-//       if (sortType !== "default") {
-//         let sortBy = "price";
-//         let order = sortType === "low-high" ? "asc" : "desc";
-//         url += `&sortBy=${sortBy}&order=${order}`;
-//       }
-//     }
-//   } else {
-//     if (!searchQuery) {
-      
-//       if (sortType !== "default") {
-//         let sortBy = "price";
-//         let order = sortType === "low-high" ? "asc" : "desc";
-//         url += `?sortBy=${sortBy}&order=${order}`;
-//       }
-//     } else {
-//       let sortBy = "price";
-//       let order = sortType === "low-high" ? "asc" : "desc";
-      
-//       if (sortType !== "default") {
-//         let sortBy = "price";
-//         let order = sortType === "low-high"
-//               ? "asc"
-//               : "desc";
-//         url += `&sortBy=${sortBy}&order=${order}`;
-//       }
-//     }
-//   }  
-//   const response = await fetch(url);
-//   const { products } = await response.json();
-
-//   displayProducts(products);
-// }
-
-
-  async function loadProducts(
-    category = "all",
-    searchQuery = "",
-    sortType = "defa"
-  ) {
-    let url = `${API_URL}/products`;
-
-    if (category !== "all") {
-      url += `/category/${category}`;
+      url += `/category/${category}?sortBy=${sortBy}&order=${order}&limit=0`;
+    } else {
+      url += `/category/${category}?limit=0`;
     }
+  } else {
+    if (sortType !== "default") {
+      let sortBy = "price";
+      let order = sortType === "low-high" ? "asc" : "desc";
 
-    if (searchQuery) {
-      url += `/search?q=${searchQuery}`;
+      url += `?sortBy=${sortBy}&order=${order}&limit=0`;
+    } else {
+      url += "?limit=0";
     }
-
-    if (sortType && sortType !== "default") {
-      let sortBy = "price"; // where the sorting will be done
-      let order = sortType === "low-high" ? "asc" : "desc"; // ascending or descending order
-      url += `?sortBy=${sortBy}&order=${order}`;
-    }
-
-    const response = await fetch(url);
-    const { products } = await response.json();
-
-    displayProducts(products);
   }
+
+  const response = await fetch(url);
+  const { products } = await response.json();
+  let filteredProducts = products;
+
+  if (searchQuery) {
+    filteredProducts = products.filter((product) => {
+      if (product.title.toLowerCase().includes(searchQuery.toLowerCase())) {
+        return true;
+      }
+    });
+  }
+
+  displayProducts(filteredProducts);
+}
 
 // Display Products
 function displayProducts(products) {
@@ -125,23 +83,8 @@ document.getElementById("get-products").addEventListener("click", async () => {
   const category = document.getElementById("categories").value;
   const sortType = document.getElementById("sort").value;
   const searchQuery = document.getElementById("search").value;
-  console.log(category, sortType, searchQuery);
   await loadProducts(category, searchQuery, sortType);
 });
-
-// document.getElementById("categories").addEventListener("change", async () => {
-//   const category = document.getElementById("categories").value;
-//   const sortType = document.getElementById("sort").value;
-//   const searchQuery = document.getElementById("search").value;
-//   await loadProducts(category, searchQuery, sortType);
-// });
-
-// document.getElementById("search").addEventListener("input", async () => {
-//   const category = document.getElementById("categories").value;
-//   const sortType = document.getElementById("sort").value;
-//   const searchQuery = document.getElementById("search").value;
-//   await loadProducts(category, searchQuery, sortType);
-// });
 
 // On Page Load
 window.addEventListener("DOMContentLoaded", () => {
